@@ -1,35 +1,22 @@
-import Paper from "@mui/material/Paper";
-import { Box, Typography, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { ModulesTableContent } from "./SectionTableContent";
-import { useNavigate } from "react-router";
 
-export const SectionTable = () => {
-  const navigate = useNavigate();
+interface SectionTableProps {
+  embedded?: boolean;
+}
+
+export const SectionTable = ({ embedded = false }: SectionTableProps) => {
+  if (embedded) {
+    return (
+      <Box sx={{ width: "100%" }}>
+        <ModulesTableContent />
+      </Box>
+    );
+  }
 
   return (
-    <Paper
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        width: "100%",
-        padding: 2,
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          gap: 2,
-          width: "100%",
-          justifyContent: "space-between",
-        }}
-      >
-        <Typography variant="subtitle1">Lista de sections</Typography>
-        <Button variant="contained" onClick={() => navigate("/section")}>
-          Adicionar seção
-        </Button>
-      </Box>
+    <Box sx={{ width: "100%" }}>
       <ModulesTableContent />
-    </Paper>
+    </Box>
   );
 };
