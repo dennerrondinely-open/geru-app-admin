@@ -40,10 +40,4 @@ jobs:
           VITE_CLIENT_ID: ${{ secrets.VITE_CLIENT_ID }}
 
       - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          firebaseToken: ${{ secrets.FIREBASE_TOKEN }}
-          channelId: live
-          projectId: geru-app-dev
+        run: npx firebase deploy --only hosting --project geru-app-dev --token "${{ secrets.FIREBASE_TOKEN }}"
