@@ -14,10 +14,15 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import { useSections } from "../../../context/section";
 import { useNavigate } from "react-router";
+import { useEffect } from "react";
 
 export const ModulesTableContent = () => {
   const { loading, sections } = useSections();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("Sections updated:", sections);
+  }, [sections]);
 
   if (loading) {
     return (

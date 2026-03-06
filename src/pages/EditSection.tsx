@@ -37,9 +37,7 @@ export const EditSection = () => {
     };
 
   const handleActiveChange = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log("Event:", event);
     const { checked } = event.target;
-    console.log("Checked:", checked);
     if (checked !== undefined)
       setData((state) => {
         return { ...state, active: checked } as unknown as Section;

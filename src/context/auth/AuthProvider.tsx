@@ -24,10 +24,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    console.log("Auth state changed:", { user, loading });
-  }, [user, loading]);
-
   const signInWithEmail = async (email: string, password: string) => {
     setLoading(true);
     try {

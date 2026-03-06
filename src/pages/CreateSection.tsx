@@ -30,9 +30,7 @@ export const CreateSection = () => {
     };
 
   const handleActiveChange = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log("Event:", event);
     const { checked } = event.target;
-    console.log("Checked:", checked);
     if (checked !== undefined)
       setData((state) => {
         return { ...state, active: checked } as unknown as Section;
@@ -50,14 +48,14 @@ export const CreateSection = () => {
       } else {
         enqueueSnackbar(
           "Por favor, preencha os dados da comunicação antes de salvar.",
-          { variant: "warning" }
+          { variant: "warning" },
         );
       }
     } catch (error) {
       console.error("Erro ao adicionar comunicação:", error);
       enqueueSnackbar(
         "Ocorreu um erro ao adicionar a comunicação. Tente novamente.",
-        { variant: "error" }
+        { variant: "error" },
       );
     }
   };
