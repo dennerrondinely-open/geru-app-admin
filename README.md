@@ -95,6 +95,42 @@ pnpm lint       # Executa o ESLint
 
 ---
 
+## Deploy & CI/CD
+
+O projeto utiliza **GitHub Actions** para deploy automatizado no **Firebase Hosting**.
+
+### Fluxo
+
+| Evento | Workflow | Destino |
+|---|---|---|
+| Push em `main` | `deploy.yml` | Produção (`live`) |
+| Pull Request para `main` | `preview.yml` | Canal de preview único por PR |
+
+No fluxo de PR, o bot do Firebase posta automaticamente o link do preview como comentário no PR.
+
+### Configuração dos Secrets
+
+Acesse **Settings → Secrets and variables → Actions** no repositório e adicione:
+
+| Secret | Descrição |
+|---|---|
+| `FIREBASE_SERVICE_ACCOUNT` | JSON da Service Account do Firebase (com permissão de Hosting) |
+| `VITE_FIREBASE_API_KEY` | API Key do Firebase |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Auth Domain do projeto |
+| `VITE_FIREBASE_PROJECT_ID` | Project ID |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Storage Bucket |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Messaging Sender ID |
+| `VITE_FIREBASE_APP_ID` | App ID |
+| `VITE_CLIENT_ID` | Client ID (Google Analytics) |
+
+### Como obter o `FIREBASE_SERVICE_ACCOUNT`
+
+1. Acesse o [Firebase Console](https://console.firebase.google.com) → Configurações do projeto → Contas de serviço
+2. Clique em **Gerar nova chave privada**
+3. Copie o conteúdo do JSON gerado e cole no secret `FIREBASE_SERVICE_ACCOUNT`
+
+---
+
 ## Arquitetura do Projeto
 
 ```
