@@ -4,7 +4,6 @@ import type { AuthContextType } from "./types";
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
-  signInWithEmail: async () => {},
-  signUpWithEmail: async () => {},
+  signInWithGoogle: async () => {},
   signOut: async () => {},
 });
