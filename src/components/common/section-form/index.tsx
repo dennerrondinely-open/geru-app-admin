@@ -90,7 +90,7 @@ export const SectionForm = ({
           label="Tipo do Link"
           icon={<ClipboardList size={20} />}
           value={data?.buttonType || ""}
-          onChange={onChange("linkType")}
+          onChange={onChange("buttonType")}
           items={[
             { label: "Interno", value: "internal" },
             { label: "Externo", value: "external" },

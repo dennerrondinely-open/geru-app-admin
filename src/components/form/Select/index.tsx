@@ -5,16 +5,13 @@ import {
   MenuItem,
   type SelectChangeEvent,
 } from "@mui/material";
-import type { ChangeEvent } from "react";
 
 interface SelectProps {
   label?: string;
   icon?: React.ReactNode;
   items: Array<{ label: string; value: string | number }>;
   value?: string;
-  onChange?: (
-    event: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
-  ) => void;
+  onChange?: (event: SelectChangeEvent<string>) => void;
 }
 
 export const Select = ({
