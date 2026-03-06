@@ -1,46 +1,30 @@
 import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
   signOut as firebaseSignOut,
   getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import { app } from "./firebase";
 
 export const auth = getAuth(app);
 
-export const signInWithEmail = async (email: string, password: string) => {
-  try {
-    return await signInWithEmailAndPassword(auth, email, password);
-  } catch (err) {
-    console.error("signInWithEmail error:", err);
-    throw err;
-  }
-};
+const ALLOWED_DOMAIN = "open-co.com";
 
-export const signUpWithEmail = async (email: string, password: string) => {
-  try {
-    return await createUserWithEmailAndPassword(auth, email, password);
-  } catch (err) {
-    console.error("signUpWithEmail error:", err);
-    throw err;
-  }
-};
+export const signInWithGoogle = async () => {
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ hd: ALLOWED_DOMAIN });
 
-export const resetPassword = async (email: string) => {
-  try {
-    return await sendPasswordResetEmail(auth, email);
-  } catch (err) {
-    console.error("resetPassword error:", err);
-    throw err;
+  const result = await signInWithPopup(auth, provider);
+  const email = result.user.email ?? "";
+
+  if (!email.endsWith(`@${ALLOWED_DOMAIN}`)) {
+    await firebaseSignOut(auth);
+    throw new Error(`Acesso restrito ao domínio @${ALLOWED_DOMAIN}.`);
   }
+
+  return result;
 };
 
 export const signOutUser = async () => {
-  try {
-    return await firebaseSignOut(auth);
-  } catch (err) {
-    console.error("signOutUser error:", err);
-    throw err;
-  }
+  return firebaseSignOut(auth);
 };

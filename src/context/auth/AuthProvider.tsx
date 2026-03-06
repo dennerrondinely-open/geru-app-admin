@@ -1,13 +1,6 @@
-// ...existing code...
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import {
-  signInWithEmail as apiSignInWithEmail,
-  signUpWithEmail as apiSignUpWithEmail,
-  resetPassword as apiResetPassword,
-  signOutUser,
-  auth,
-} from "api/auth";
+import { signInWithGoogle as apiSignInWithGoogle, signOutUser, auth } from "api/auth";
 import { AuthContext } from "./AuthContext";
 import type { AuthContextType, AuthProviderProps } from "./types";
 import { LoginForm } from "components/auth/Login";
@@ -24,28 +17,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => unsubscribe();
   }, []);
 
-  const signInWithEmail = async (email: string, password: string) => {
+  const signInWithGoogle = async () => {
     setLoading(true);
     try {
-      await apiSignInWithEmail(email, password);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const signUpWithEmail = async (email: string, password: string) => {
-    setLoading(true);
-    try {
-      await apiSignUpWithEmail(email, password);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const resetPassword = async (email: string) => {
-    setLoading(true);
-    try {
-      await apiResetPassword(email);
+      await apiSignInWithGoogle();
     } finally {
       setLoading(false);
     }
@@ -61,9 +36,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, loading, signInWithEmail, signUpWithEmail, resetPassword, signOut }}
-    >
+    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>
       {user ? children : <LoginForm />}
     </AuthContext.Provider>
   );
