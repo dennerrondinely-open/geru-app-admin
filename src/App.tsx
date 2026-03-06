@@ -1,23 +1,30 @@
-import { Container, CssBaseline } from "@mui/material";
+import { CssBaseline } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import { Routes } from "./routes";
-import { Header } from "./components/layout/Header";
+import { AppLayout } from "./components/layout/AppLayout";
 import { AuthProvider } from "context/auth/AuthProvider";
 import { SectionProvider } from "context/section";
+import { LinkProvider } from "context/link";
 import { SnackbarProvider } from "notistack";
+import { geruTheme } from "./theme";
 
 function App() {
   return (
-    <SnackbarProvider>
-      <AuthProvider>
-        <SectionProvider>
-          <CssBaseline />
-          <Header />
-          <Container fixed>
-            <Routes />
-          </Container>
-        </SectionProvider>
-      </AuthProvider>
-    </SnackbarProvider>
+    <ThemeProvider theme={geruTheme}>
+      <SnackbarProvider>
+        <AuthProvider>
+          {/* Providers globais para o Dashboard (Home) que exibe métricas de ambos */}
+          <SectionProvider>
+            <LinkProvider>
+              <CssBaseline />
+              <AppLayout>
+                <Routes />
+              </AppLayout>
+            </LinkProvider>
+          </SectionProvider>
+        </AuthProvider>
+      </SnackbarProvider>
+    </ThemeProvider>
   );
 }
 
