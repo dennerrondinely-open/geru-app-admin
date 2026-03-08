@@ -1,0 +1,46 @@
+name: Deploy to Firebase Hosting (Homolog)
+
+on:
+  push:
+    branches:
+      - homolog
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy (Homolog)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.HOMOLOG_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.HOMOLOG_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.HOMOLOG_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.HOMOLOG_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.HOMOLOG_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.HOMOLOG_FIREBASE_APP_ID }}
+          VITE_CLIENT_ID: ${{ secrets.HOMOLOG_CLIENT_ID }}
+
+      - name: Install Firebase Tools
+        run: npm install -g firebase-tools
+
+      - name: Deploy to Firebase Hosting (Homolog)
+        run: firebase deploy --only hosting --project geru-app-dev --token "${{ secrets.FIREBASE_TOKEN }}"
