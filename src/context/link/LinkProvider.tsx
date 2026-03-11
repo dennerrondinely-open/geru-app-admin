@@ -1,4 +1,3 @@
-"use client";
 
 import { useGetLinksUseCase } from "use-cases/links";
 import { LinkContext } from ".";

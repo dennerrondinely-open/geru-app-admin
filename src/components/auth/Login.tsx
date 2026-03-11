@@ -1,4 +1,3 @@
-"use client";
 
 import { useContext, useState } from "react";
 import { Box, Button, CircularProgress, Paper, Typography } from "@mui/material";

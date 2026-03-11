@@ -1,4 +1,3 @@
-"use client";
 
 import { FormControlLabel, Switch as MuiSwitch } from "@mui/material";
 

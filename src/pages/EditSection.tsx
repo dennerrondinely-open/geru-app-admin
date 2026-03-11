@@ -1,9 +1,6 @@
-"use client";
-export const dynamic = "force-dynamic";
-
 import { Box, IconButton, Typography } from "@mui/material";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import { useRouter, useParams } from "next/navigation";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import type { Section } from "@/domains/section";
@@ -11,9 +8,9 @@ import { useGetSectionUseCase, useUpdateSectionUseCase } from "use-cases/section
 import { SectionForm } from "@/components/common/section-form";
 
 export default function EditSectionPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { data: sectionData } = useGetSectionUseCase(id);
+  const { data: sectionData } = useGetSectionUseCase(id!);
   const { updateSection } = useUpdateSectionUseCase();
   const [data, setData] = useState<Section | undefined>(undefined);
 
@@ -31,7 +28,7 @@ export default function EditSectionPage() {
       const { id: _id, ...rest } = data;
       await updateSection(_id, rest);
       enqueueSnackbar("Section atualizada!", { variant: "success" });
-      router.push("/sections");
+      navigate("/sections");
     } catch {
       enqueueSnackbar("Erro ao atualizar section.", { variant: "error" });
     }
@@ -40,7 +37,7 @@ export default function EditSectionPage() {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        <IconButton onClick={() => router.push("/sections")}><NavigateBeforeIcon /></IconButton>
+        <IconButton onClick={() => navigate("/sections")}><NavigateBeforeIcon /></IconButton>
         <Typography variant="h5" fontWeight="bold">Editar Section</Typography>
       </Box>
       <SectionForm data={data} onChange={handleChange} onActiveChange={(v) => setData((p) => p ? { ...p, active: v } : p)} onSubmit={handleSubmit} />

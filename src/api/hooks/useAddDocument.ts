@@ -1,4 +1,3 @@
-"use client";
 
 import { addDoc, collection, db } from "../firebase";
 import type { WithFieldValue } from "../firebase";

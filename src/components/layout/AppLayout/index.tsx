@@ -1,13 +1,12 @@
-"use client";
-
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import { Box } from "@mui/material";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 
 const SIDEBAR_WIDTH = 240;
 
-export const AppLayout = ({ children }: { children: React.ReactNode }) => {
+export const AppLayout = () => {
   const [open, setOpen] = useState(false);
   const handleToggle = () => setOpen((v) => !v);
 
@@ -25,7 +24,7 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
           transition: "margin 0.2s ease",
         }}
       >
-        {children}
+        <Outlet />
       </Box>
     </Box>
   );

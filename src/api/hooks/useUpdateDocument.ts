@@ -1,4 +1,3 @@
-"use client";
 
 import { doc, updateDoc, db } from "../firebase";
 

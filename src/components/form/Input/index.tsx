@@ -1,4 +1,3 @@
-"use client";
 
 import { TextField, InputAdornment } from "@mui/material";
 

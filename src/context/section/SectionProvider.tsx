@@ -1,4 +1,3 @@
-"use client";
 
 import { useGetSectionsUseCase } from "use-cases/sections";
 import { SectionContext } from ".";

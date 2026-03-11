@@ -1,11 +1,9 @@
-"use client";
-
 import { Drawer, List, ListItemButton, ListItemIcon, ListItemText, IconButton, Box } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import LinkIcon from "@mui/icons-material/Link";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { usePathname, useRouter } from "next/navigation";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const WIDTH = 240;
 
@@ -16,8 +14,8 @@ const items = [
 ];
 
 export const Sidebar = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
-  const pathname = usePathname();
-  const router = useRouter();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   return (
     <Drawer
@@ -33,7 +31,7 @@ export const Sidebar = ({ open, onClose }: { open: boolean; onClose: () => void 
           <ListItemButton
             key={item.path}
             selected={pathname === item.path}
-            onClick={() => router.push(item.path)}
+            onClick={() => navigate(item.path)}
           >
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText primary={item.label} />

@@ -1,6 +1,3 @@
-"use client";
-export const dynamic = "force-dynamic";
-
 import { Box, Paper, Typography, Divider, Avatar } from "@mui/material";
 import { useSections } from "@/context/section";
 import { useLinks } from "@/context/link";

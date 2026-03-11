@@ -1,7 +1,5 @@
-"use client";
-
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams } from "react-router-dom";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { db } from "@/api/firebase";
 import type { Link } from "@/domains/link";
@@ -45,7 +43,6 @@ export default function OneLinkPage() {
         const platform = detectPlatform();
         const targetUrl = resolveUrl(link, platform);
 
-        // Registra o clique (fire-and-forget)
         addDoc(collection(db, "links", link.id, "clicks"), {
           platform,
           userAgent: navigator.userAgent,
@@ -77,7 +74,6 @@ export default function OneLinkPage() {
     );
   }
 
-  // loading
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
       <p>Redirecionando...</p>

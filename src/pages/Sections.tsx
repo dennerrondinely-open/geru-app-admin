@@ -1,15 +1,12 @@
-"use client";
-export const dynamic = "force-dynamic";
-
 import { Box, Typography, Divider, Paper, Button, Chip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useSections } from "@/context/section";
 import { SectionTable } from "@/components/common/section-table";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 
 export default function SectionsPage() {
   const { sections } = useSections();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -24,7 +21,7 @@ export default function SectionsPage() {
             <Typography variant="subtitle1" fontWeight={600}>Sections</Typography>
             <Chip label={sections.length} size="small" color="primary" />
           </Box>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => router.push("/sections/new")}>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate("/sections/new")}>
             Nova Section
           </Button>
         </Box>

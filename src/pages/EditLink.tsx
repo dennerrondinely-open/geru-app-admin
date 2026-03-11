@@ -1,9 +1,6 @@
-"use client";
-export const dynamic = "force-dynamic";
-
 import { Box, IconButton, Typography } from "@mui/material";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import { useRouter, useParams } from "next/navigation";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import type { Link } from "@/domains/link";
@@ -11,9 +8,9 @@ import { useGetLinkUseCase, useUpdateLinkUseCase } from "use-cases/links";
 import { LinkForm } from "@/components/common/link-form";
 
 export default function EditLinkPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { data: linkData } = useGetLinkUseCase(id);
+  const { data: linkData } = useGetLinkUseCase(id!);
   const { updateLink } = useUpdateLinkUseCase();
   const [data, setData] = useState<Link | undefined>(undefined);
 
@@ -30,7 +27,7 @@ export default function EditLinkPage() {
     try {
       await updateLink(data.id, { name: data.name, slug: data.slug, type: data.type, webUrl: data.webUrl, appUrl: data.appUrl, appStore: data.appStore, playStore: data.playStore, active: data.active });
       enqueueSnackbar("Link atualizado!", { variant: "success" });
-      router.push("/links");
+      navigate("/links");
     } catch {
       enqueueSnackbar("Erro ao atualizar link.", { variant: "error" });
     }
@@ -39,7 +36,7 @@ export default function EditLinkPage() {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        <IconButton onClick={() => router.push("/links")}><NavigateBeforeIcon /></IconButton>
+        <IconButton onClick={() => navigate("/links")}><NavigateBeforeIcon /></IconButton>
         <Typography variant="h5" fontWeight="bold">Editar Link</Typography>
       </Box>
       <LinkForm data={data} onChange={handleChange} onActiveChange={(v) => setData((p) => p ? { ...p, active: v } : p)} onSubmit={handleSubmit} />

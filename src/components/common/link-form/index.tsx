@@ -1,4 +1,3 @@
-"use client";
 
 import { Box, Button, Paper } from "@mui/material";
 import { Switch } from "@/components/form/Switch";
