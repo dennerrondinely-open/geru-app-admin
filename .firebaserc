@@ -1,5 +1,20 @@
 {
   "projects": {
-    "default": "geru-app-dev"
+    "default": "geru-app-dev",
+    "prod": "geru-app"
+  },
+  "targets": {
+    "geru-app-dev": {
+      "hosting": {
+        "admin": ["geru-app-dev-admin"],
+        "onelink": ["geru-app-dev-onelink"]
+      }
+    },
+    "geru-app": {
+      "hosting": {
+        "admin": ["geru-app-admin"],
+        "onelink": ["geru-app-onelink"]
+      }
+    }
   }
 }
