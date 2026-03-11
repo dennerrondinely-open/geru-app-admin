@@ -43,5 +43,8 @@ jobs:
       - name: Install Firebase Tools
         run: npm install -g firebase-tools
 
-      - name: Deploy to Firebase Hosting (Homolog)
-        run: firebase deploy --only hosting --project geru-app-dev --token "${{ secrets.FIREBASE_TOKEN }}"
+      - name: Deploy Admin (Homolog)
+        run: firebase deploy --only hosting:admin --project geru-app-dev --token "${{ secrets.FIREBASE_TOKEN }}"
+
+      - name: Deploy OneLink (Homolog)
+        run: firebase deploy --only hosting:onelink --project geru-app-dev --token "${{ secrets.FIREBASE_TOKEN }}"
