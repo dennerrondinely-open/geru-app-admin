@@ -1,9 +1,5 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  experimental: {
-    // habilita suporte a Firebase Hosting web frameworks
-  },
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
