@@ -1,37 +1,31 @@
-import { Box } from "@mui/material";
+"use client";
+
 import { useState } from "react";
-import { Header } from "../Header";
-import { Sidebar, DRAWER_WIDTH } from "../Sidebar";
+import { Box } from "@mui/material";
+import { Header } from "@/components/layout/Header";
+import { Sidebar } from "@/components/layout/Sidebar";
 
-interface AppLayoutProps {
-  children: React.ReactNode;
-}
+const SIDEBAR_WIDTH = 240;
 
-export const AppLayout = ({ children }: AppLayoutProps) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const handleToggle = () => setSidebarOpen((prev) => !prev);
+export const AppLayout = ({ children }: { children: React.ReactNode }) => {
+  const [open, setOpen] = useState(false);
+  const handleToggle = () => setOpen((v) => !v);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <Header onMenuToggle={handleToggle} />
-      <Box sx={{ display: "flex", flex: 1 }}>
-        <Sidebar open={sidebarOpen} onClose={handleToggle} />
-        <Box
-          component="main"
-          sx={{
-            flex: 1,
-            p: 3,
-            transition: (theme) =>
-              theme.transitions.create("margin", {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-              }),
-            marginLeft: sidebarOpen ? `${DRAWER_WIDTH}px` : 0,
-          }}
-        >
-          {children}
-        </Box>
+    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "background.default" }}>
+      <Header onMenuClick={handleToggle} />
+      <Sidebar open={open} onClose={handleToggle} />
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          mt: "64px",
+          p: 3,
+          ml: open ? `${SIDEBAR_WIDTH}px` : 0,
+          transition: "margin 0.2s ease",
+        }}
+      >
+        {children}
       </Box>
     </Box>
   );

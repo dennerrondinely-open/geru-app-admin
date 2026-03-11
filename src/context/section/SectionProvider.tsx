@@ -1,22 +1,12 @@
-import {
-  useAddSectionUseCase,
-  useGetSectionsUseCase,
-} from "use-cases/sections";
-import { SectionContext } from "./sectionContext";
-import type { Section } from "domains/section";
+"use client";
 
-export const SectionProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+import { useGetSectionsUseCase } from "use-cases/sections";
+import { SectionContext } from ".";
+
+export const SectionProvider = ({ children }: { children: React.ReactNode }) => {
   const { sections, loading } = useGetSectionsUseCase();
-  const { addSection } = useAddSectionUseCase();
-
-  const addSectionHandler = async (section: Section) => {
-    await addSection(section);
-  };
-
   return (
-    <SectionContext.Provider value={{ sections, loading, addSection: addSectionHandler }}>
+    <SectionContext.Provider value={{ sections, loading }}>
       {children}
     </SectionContext.Provider>
   );

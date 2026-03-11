@@ -6,7 +6,3 @@ export type AuthContextType = {
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
 };
-
-export type AuthProviderProps = {
-  children: React.ReactNode;
-};

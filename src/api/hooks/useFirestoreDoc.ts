@@ -1,50 +1,29 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { doc, onSnapshot, db } from "../firebase";
 
-type FirestoreDoc<T> = {
-  data: T | null;
-  loading: boolean;
-  error: string | null;
-};
-
-export function useFirestoreDoc<T>(collection: string, docId?: string) {
-  const [state, setState] = useState<FirestoreDoc<T>>({
-    data: null,
-    loading: true,
-    error: null,
-  });
+export function useFirestoreDoc<T extends { id: string }>(
+  collectionName: string,
+  id?: string
+) {
+  const [data, setData] = useState<T | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!docId) return;
-
-    const fetchDoc = async () => {
-      setState({ data: null, loading: true, error: null });
-
-      try {
-        const docRef = doc(db, collection, docId);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          setState({ data: docSnap.data() as T, loading: false, error: null });
-        } else {
-          setState({
-            data: null,
-            loading: false,
-            error: "Documento não encontrado",
-          });
-        }
-      } catch (error) {
-        setState({
-          data: null,
-          loading: false,
-          error: (error as Error).message,
-        });
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+    const ref = doc(db, collectionName, id);
+    const unsubscribe = onSnapshot(ref, (snap) => {
+      if (snap.exists()) {
+        setData({ id: snap.id, ...snap.data() } as T);
       }
-    };
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, [collectionName, id]);
 
-    fetchDoc();
-  }, [collection, docId]);
-
-  return state;
+  return { data, loading };
 }

@@ -1,108 +1,36 @@
-import { Box, Button, Paper, type SelectChangeEvent } from "@mui/material";
-import { Switch } from "components/form/Switch";
-import { Input } from "components/form/Input";
-import {
-  Image as ImageIcon,
-  Type,
-  MousePointer,
-  Link as LinkIcon,
-  ClipboardList,
-} from "lucide-react";
-import type { Section } from "domains/section";
-import { Select } from "components/form/Select";
+"use client";
+
+import { Box, Paper, Button, TextField, InputAdornment } from "@mui/material";
+import { Switch } from "@/components/form/Switch";
+import type { Section } from "@/domains/section";
 
 interface SectionFormProps {
-  data: Section;
-  onChange: (
-    key: string
-  ) => (
-    event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
-  ) => void;
-  onActiveChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  data?: Section;
+  onChange: (key: string) => (e: React.ChangeEvent<HTMLInputElement> | { target: { value: string } }) => void;
+  onActiveChange: (value: boolean) => void;
   onSubmit: () => void;
 }
 
-export const SectionForm = ({
-  data,
-  onChange,
-  onActiveChange,
-  onSubmit,
-}: SectionFormProps) => {
-  return (
-    <Paper sx={{ p: 2, width: "100%" }}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          width: "100%",
-        }}
-      >
-        <Switch
-          label="Ativo"
-          checked={data?.active}
-          onChange={onActiveChange}
-          color="success"
-        />
-        <Input
-          label="Nome da Comunicação"
-          value={data?.name || ""}
-          icon={<Type size={20} />}
-          onChange={onChange("name")}
-        />
-        <Input
-          label="Pré-título"
-          value={data?.preTitle || ""}
-          icon={<Type size={20} />}
-          onChange={onChange("preTitle")}
-        />
-        <Input
-          label="Título"
-          value={data?.title || ""}
-          icon={<Type size={20} />}
-          onChange={onChange("title")}
-        />
-        <Input
-          label="Link da Imagem de Fundo"
-          value={data?.backgroundLink || ""}
-          icon={<ImageIcon size={20} />}
-          onChange={onChange("backgroundLink")}
-        />
-        <Input
-          label="Texto da mensagem"
-          value={data?.message || ""}
-          icon={<MousePointer size={20} />}
-          onChange={onChange("message")}
-        />
-        <Input
-          label="Texto do Botão"
-          value={data?.buttonText || ""}
-          icon={<MousePointer size={20} />}
-          onChange={onChange("buttonText")}
-        />
-        <Input
-          label="Link do Botão"
-          value={data?.buttonLink || ""}
-          icon={<LinkIcon size={20} />}
-          onChange={onChange("buttonLink")}
-        />
-        <Select
-          label="Tipo do Link"
-          icon={<ClipboardList size={20} />}
-          value={data?.buttonType || ""}
-          onChange={onChange("buttonType")}
-          items={[
-            { label: "Interno", value: "internal" },
-            { label: "Externo", value: "external" },
-          ]}
-        />
-        <Box sx={{ height: 16 }} />
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button variant="contained" color="primary" onClick={onSubmit}>
-            Salvar Comunicação
-          </Button>
-        </Box>
+const fields: { key: keyof Section; label: string }[] = [
+  { key: "name", label: "Nome" },
+  { key: "preTitle", label: "Pré-título" },
+  { key: "title", label: "Título" },
+  { key: "message", label: "Mensagem" },
+  { key: "backgroundLink", label: "Background URL" },
+  { key: "buttonText", label: "Texto do Botão" },
+  { key: "buttonLink", label: "Link do Botão" },
+];
+
+export const SectionForm = ({ data, onChange, onActiveChange, onSubmit }: SectionFormProps) => (
+  <Paper sx={{ p: 2, width: "100%" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <Switch label="Ativo" checked={data?.active} onChange={onActiveChange} color="success" />
+      {fields.map(({ key, label }) => (
+        <TextField key={key} label={label} value={(data?.[key] as string) || ""} onChange={onChange(key)} fullWidth size="small" />
+      ))}
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button variant="contained" onClick={onSubmit}>Salvar</Button>
       </Box>
-    </Paper>
-  );
-};
+    </Box>
+  </Paper>
+);

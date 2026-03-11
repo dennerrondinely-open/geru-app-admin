@@ -1,17 +1,19 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { signInWithGoogle as apiSignInWithGoogle, signOutUser, auth } from "api/auth";
 import { AuthContext } from "./AuthContext";
-import type { AuthContextType, AuthProviderProps } from "./types";
-import { LoginForm } from "components/auth/Login";
+import type { AuthContextType } from "./types";
+import { LoginForm } from "@/components/auth/Login";
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<AuthContextType["user"] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser as AuthContextType["user"] | null);
+      setUser(currentUser);
       setLoading(false);
     });
     return () => unsubscribe();
@@ -37,7 +39,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>
-      {user ? children : <LoginForm />}
+      {loading ? null : user ? children : <LoginForm />}
     </AuthContext.Provider>
   );
 };

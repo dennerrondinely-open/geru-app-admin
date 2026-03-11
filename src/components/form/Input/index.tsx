@@ -1,25 +1,23 @@
-import { Box, InputLabel, TextField } from "@mui/material";
+"use client";
 
-interface InputProps extends Omit<React.ComponentProps<typeof TextField>, 'onChange'> {
-  label?: string;
+import { TextField, InputAdornment } from "@mui/material";
+
+interface InputProps {
+  label: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   icon?: React.ReactNode;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  type?: string;
 }
 
-export const Input = ({ label, icon, onChange, ...rest }: InputProps) => {
-  return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-      <InputLabel
-        sx={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-        }}
-      >
-        {icon}
-        {label}
-      </InputLabel>
-      <TextField variant="outlined" onChange={onChange} size="small" {...rest} />
-    </Box>
-  );
-};
+export const Input = ({ label, value, onChange, icon, type = "text" }: InputProps) => (
+  <TextField
+    label={label}
+    value={value}
+    onChange={onChange}
+    type={type}
+    fullWidth
+    size="small"
+    InputProps={icon ? { startAdornment: <InputAdornment position="start">{icon}</InputAdornment> } : undefined}
+  />
+);

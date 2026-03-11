@@ -1,26 +1,17 @@
-import { Box, InputLabel, Switch as MuiSwitch } from "@mui/material";
+"use client";
 
-interface SwitchProps
-  extends Omit<React.ComponentProps<typeof MuiSwitch>, "onChange"> {
-  label?: string;
-  icon?: React.ReactNode;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+import { FormControlLabel, Switch as MuiSwitch } from "@mui/material";
+
+interface SwitchProps {
+  label: string;
+  checked?: boolean;
+  onChange: (value: boolean) => void;
+  color?: "primary" | "secondary" | "success" | "error";
 }
 
-export const Switch = ({ label, icon, onChange, ...props }: SwitchProps) => {
-  return (
-    <Box>
-      <InputLabel
-        sx={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-        }}
-      >
-        {icon}
-        {label}
-      </InputLabel>
-      <MuiSwitch onChange={onChange} {...props} />
-    </Box>
-  );
-};
+export const Switch = ({ label, checked = false, onChange, color = "primary" }: SwitchProps) => (
+  <FormControlLabel
+    control={<MuiSwitch checked={checked} onChange={(e) => onChange(e.target.checked)} color={color} />}
+    label={label}
+  />
+);

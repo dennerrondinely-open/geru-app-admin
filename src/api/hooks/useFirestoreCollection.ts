@@ -1,37 +1,26 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
-import {
-  collection,
-  onSnapshot,
-  query,
-  QueryConstraint,
-} from "firebase/firestore";
-import { db } from "../firebase";
+"use client";
 
-export function useFirestoreCollection<T = unknown>(
-  collectionName: string,
-  constraints: QueryConstraint[] = []
+import { useEffect, useState } from "react";
+import { collection, onSnapshot, query, db } from "../firebase";
+
+export function useFirestoreCollection<T extends { id: string }>(
+  collectionName: string
 ) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = constraints.length
-      ? query(collection(db, collectionName), ...constraints)
-      : query(collection(db, collectionName));
-
+    const q = query(collection(db, collectionName));
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const items: T[] = snapshot.docs.map((doc) => ({
-        ...(doc.data() as T),
+      const docs = snapshot.docs.map((doc) => ({
         id: doc.id,
-      }));
-
-      setData(items);
+        ...doc.data(),
+      })) as T[];
+      setData(docs);
       setLoading(false);
     });
-
     return () => unsubscribe();
-  }, [collectionName, JSON.stringify(constraints)]);
+  }, [collectionName]);
 
   return { data, loading };
 }
