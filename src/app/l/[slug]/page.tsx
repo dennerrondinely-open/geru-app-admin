@@ -1,12 +1,13 @@
-import { redirect } from "next/navigation";
-import { headers } from "next/headers";
-import { firestoreQuery, firestoreAdd } from "@/lib/firebase-rest";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import { db } from "@/api/firebase";
 import type { Link } from "@/domains/link";
 
-export const dynamic = "force-dynamic";
-
-function detectPlatform(userAgent: string): "ios" | "android" | "web" {
-  const ua = userAgent.toLowerCase();
+function detectPlatform(): "ios" | "android" | "web" {
+  const ua = navigator.userAgent.toLowerCase();
   if (/iphone|ipad|ipod/.test(ua)) return "ios";
   if (/android/.test(ua)) return "android";
   return "web";
@@ -18,30 +19,68 @@ function resolveUrl(link: Link, platform: "ios" | "android" | "web"): string {
   return link.webUrl;
 }
 
-export default async function OneLinkPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const headersList = await headers();
-  const userAgent = headersList.get("user-agent") ?? "";
+export default function OneLinkPage() {
+  const { slug } = useParams<{ slug: string }>();
+  const [status, setStatus] = useState<"loading" | "not-found" | "error">("loading");
 
-  const results = await firestoreQuery<Link>("links", [
-    { field: "slug", op: "EQUAL", value: slug },
-    { field: "active", op: "EQUAL", value: true },
-  ]);
+  useEffect(() => {
+    if (!slug) return;
 
-  if (results.length === 0) {
-    redirect("/");
+    async function resolve() {
+      try {
+        const q = query(
+          collection(db, "links"),
+          where("slug", "==", slug),
+          where("active", "==", true)
+        );
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          setStatus("not-found");
+          return;
+        }
+
+        const doc = snapshot.docs[0];
+        const link = { id: doc.id, ...doc.data() } as Link;
+        const platform = detectPlatform();
+        const targetUrl = resolveUrl(link, platform);
+
+        // Registra o clique (fire-and-forget)
+        addDoc(collection(db, "links", link.id, "clicks"), {
+          platform,
+          userAgent: navigator.userAgent,
+          createdAt: new Date(),
+        });
+
+        window.location.href = targetUrl;
+      } catch {
+        setStatus("error");
+      }
+    }
+
+    resolve();
+  }, [slug]);
+
+  if (status === "not-found") {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <p>Link não encontrado.</p>
+      </div>
+    );
   }
 
-  const link = results[0];
-  const platform = detectPlatform(userAgent);
-  const targetUrl = resolveUrl(link, platform);
+  if (status === "error") {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <p>Erro ao carregar o link.</p>
+      </div>
+    );
+  }
 
-  // Registra o clique (fire-and-forget)
-  firestoreAdd(`links/${link.id}/clicks`, {
-    platform,
-    userAgent,
-    createdAt: new Date(),
-  });
-
-  redirect(targetUrl);
+  // loading
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <p>Redirecionando...</p>
+    </div>
+  );
 }
