@@ -96,7 +96,6 @@ const FakeCard = ({
 );
 
 export const SectionPreview = ({ data }: SectionPreviewProps) => {
-  const name = data?.name || "Amazon";
   const preTitle = data?.preTitle || "Tá rolando Esquenta do";
   const title = data?.title || "Consumidor na Amazon!";
   const message = data?.message || "Separamos pra você as melhores ofertas antecipadas da Semana do Consumidor!";
